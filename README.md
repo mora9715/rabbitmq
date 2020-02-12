@@ -15,9 +15,9 @@ docker network create --driver=overlay --attachable my_network
 After that, add labels to your nodes in the following format:
 
 ```bash
-docker node update --label-add rabbitmq-01 == true node-1
-docker node update --label-add rabbitmq-03 == true node-2
-docker node update --label-add rabbitmq-03 == true node-3
+docker node update --label-add rabbitmq-01=true node-1
+docker node update --label-add rabbitmq-03=true node-2
+docker node update --label-add rabbitmq-03=true node-3
 ```
 
 To control which nodes will be added to LB export PROXY_RMQ_HOSTS with names of nodes separated by space:
