@@ -1,0 +1,16 @@
+{
+  "policies": [
+    {
+      "name": "ha-all",
+      "apply-to": "all",
+      "definition": {
+        "ha-mode": "all",
+        "ha-sync-mode": "automatic",
+        "ha-sync-batch-size": 1
+      },
+      "pattern": ".*",
+      "priority": 1,
+      "vhost": "/"
+    }
+  ]
+}

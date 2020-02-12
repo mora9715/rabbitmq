@@ -1,0 +1,98 @@
+version: "3.4"
+services:
+  rabbitmq-01:
+    build:
+      context: Docker/rabbitmq/
+      dockerfile: Dockerfile
+    hostname: rabbitmq-01
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "Passw0rd"
+      RABBITMQ_ERLANG_COOKIE: "MY-SECRET-KEY-123"
+      RABBITMQ_CONFIG_FILE: "/etc/rabbitmq/my-rabbitmq"
+    expose:
+      - "15692"
+    networks:
+      - my_network
+    volumes:
+      - rabbitmq-01-data:/var/lib/rabbitmq
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.labels.rabbitmq-01 == true]
+
+  rabbitmq-02:
+    build:
+      context: Docker/rabbitmq/
+      dockerfile: Dockerfile
+    hostname: rabbitmq-02
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "Passw0rd"
+      RABBITMQ_ERLANG_COOKIE: "MY-SECRET-KEY-123"
+      RABBITMQ_CONFIG_FILE: "/etc/rabbitmq/my-rabbitmq"
+    expose:
+      - "15692"
+    networks:
+      - my_network
+    volumes:
+      - rabbitmq-02-data:/var/lib/rabbitmq
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.labels.rabbitmq-02 == true]
+
+  rabbitmq-03:
+    build:
+      context: Docker/rabbitmq/
+      dockerfile: Dockerfile
+    hostname: rabbitmq-03
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "Passw0rd"
+      RABBITMQ_ERLANG_COOKIE: "MY-SECRET-KEY-123"
+      RABBITMQ_CONFIG_FILE: "/etc/rabbitmq/my-rabbitmq"
+    expose:
+      - "15692"
+    networks:
+      - my_network
+    volumes:
+      - rabbitmq-03-data:/var/lib/rabbitmq
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.labels.rabbitmq-03 == true]
+
+
+  balancer:
+    build:
+      context: Docker/balancer/
+      dockerfile: Dockerfile
+    environment:
+      PROXY_RMQ_HOSTS: "${PROXY_RMQ_HOSTS}"
+    networks:
+      - my_network
+    deploy:
+      mode: global
+      endpoint_mode: dnsrr
+      restart_policy:
+        condition: any
+        delay: 25s
+      update_config:
+        parallelism: 1
+        delay: 25s
+        order: start-first
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  default:
+    driver: overlay
+  my_network:
+    external: true
+
+volumes:
+  rabbitmq-01-data:
+  rabbitmq-02-data:
+  rabbitmq-03-data:
