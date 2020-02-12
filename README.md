@@ -1,5 +1,6 @@
 # RMQ
 High Availablility RMQ cluser for Docker Swarm with load balancing and messages mirroring.
+Based on https://github.com/olgac/rabbitmq
 
 Setup
 -------------
